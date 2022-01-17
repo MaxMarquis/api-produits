@@ -1,20 +1,20 @@
 <?php 
   include_once '../include/config.php';
 
-	header('Content-Type: application/json'); 
-	header('Access-Control-Allow-Origin: *'); 
+  header('Content-Type: application/json'); 
+  header('Access-Control-Allow-Origin: *'); 
 
   $mysqli = new mysqli($host, $username, $password, $database);
   if ($mysqli -> connect_errno) {	
-		echo 'Échec de connexion à la base de données MySQL: ' . $mysqli -> connect_error; 
-		exit(); 
-	} 
+    echo 'Échec de connexion à la base de données MySQL: ' . $mysqli -> connect_error; 
+    exit(); 
+  } 
 
-	switch($_SERVER['REQUEST_METHOD']) 
+  switch($_SERVER['REQUEST_METHOD']) 
   { 
-		case 'GET': // GESTION DES DEMANDES DE TYPE GET 
-			if(isset($_GET['id'])) { 
-				// CODE PERMETTANT DE RÉCUPÉRER L'ENREGISTREMENT CORRESPONDANT À L'IDENTIFIANT PASSÉ EN PARAMÈTRE
+    case 'GET': // GESTION DES DEMANDES DE TYPE GET 
+      if(isset($_GET['id'])) { 
+        // CODE PERMETTANT DE RÉCUPÉRER L'ENREGISTREMENT CORRESPONDANT À L'IDENTIFIANT PASSÉ EN PARAMÈTRE
         if ($requete = $mysqli->prepare("SELECT * FROM produits WHERE id = ?")) {
         $requete->bind_param("i", $_GET['id']);
         $requete->execute();
@@ -25,16 +25,16 @@
         echo json_encode($objet, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $requete->close();
         } 
-			} else { 
-				// CODE PERMETTANT DE RÉCUPÉRER TOUT LES ENREGISTREMENTS 
+      } else { 
+        // CODE PERMETTANT DE RÉCUPÉRER TOUT LES ENREGISTREMENTS 
         $requete = $mysqli->query('SELECT * FROM produits'); 
         $donnees_tableau = $requete->fetch_all(MYSQLI_ASSOC); 
         echo json_encode($donnees_tableau, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $requete->close();
-			} 
-			break; 
-		case 'POST': // GESTION DES DEMANDES DE TYPE POST 
-			// CODE PERMETTANT DE D'AJOUTER UN ENREGISTREMENT 
+      } 
+      break; 
+    case 'POST': // GESTION DES DEMANDES DE TYPE POST 
+      // CODE PERMETTANT DE D'AJOUTER UN ENREGISTREMENT 
       $dataJSON = file_get_contents('php://input'); 
       $data = json_decode($dataJSON, TRUE);
 
@@ -58,8 +58,8 @@
         $reponse->message .= "Erreur dans le corps de l'objet fourni"; 
       } 
       echo json_encode($reponse, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-			break; 
-		case 'PUT': // GESTION DES DEMANDES DE TYPE PUT 
+      break; 
+    case 'PUT': // GESTION DES DEMANDES DE TYPE PUT 
       // CODE PERMETTANT DE METTRE À JOUR L'ENREGISTREMENT CORRESPONDANT À L'IDENTIFIANT PASSÉ EN PARAMÈTRE 
       $reponse = new stdClass(); 
       $reponse->message = "Édition du client: "; 
@@ -87,13 +87,13 @@
         $reponse->message .= "Erreur dans les paramètres (aucun identifiant fourni)"; 
       } 
       echo json_encode($reponse, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-			break; 
-		case 'DELETE': // GESTION DES DEMANDES DE TYPE DELETE 
+      break; 
+    case 'DELETE': // GESTION DES DEMANDES DE TYPE DELETE 
       $reponse = new stdClass(); 
       $reponse->message = "Suppression du client: ";
 
-			if(isset($_GET['id'])) { 
-				// CODE PERMETTANT DE SUPPRIMER L'ENREGISTREMENT CORRESPONDANT À L'IDENTIFIANT PASSÉ EN PARAMÈTRE 
+      if(isset($_GET['id'])) { 
+        // CODE PERMETTANT DE SUPPRIMER L'ENREGISTREMENT CORRESPONDANT À L'IDENTIFIANT PASSÉ EN PARAMÈTRE 
         if ($requete = $mysqli->prepare("DELETE FROM produits WHERE id=?")) { 
           $requete->bind_param("i", $_GET['id']); 
           if($requete->execute()) { 
@@ -110,7 +110,7 @@
       } 
       echo json_encode($reponse, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
       break;
-		default: 
+    default: 
       $reponse = new stdClass();
       $reponse->message = "Opération non supportée";	
       echo json_encode($reponse, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
