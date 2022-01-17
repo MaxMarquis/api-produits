@@ -16,7 +16,7 @@
 			if(isset($_GET['id'])) { 
 				// CODE PERMETTANT DE RÉCUPÉRER L'ENREGISTREMENT CORRESPONDANT À L'IDENTIFIANT PASSÉ EN PARAMÈTRE
         if ($requete = $mysqli->prepare("SELECT * FROM produits WHERE id = ?")) {
-          $requete->bind_param("i", $_GET['id']);
+        $requete->bind_param("i", $_GET['id']);
         $requete->execute();
 
         $resultat_requete = $requete->get_result(); 
